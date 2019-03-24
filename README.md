@@ -19,7 +19,7 @@ If the `/usr/local/bin/prometheus` binary already exists, the role will skip the
 
 - `prometheus_config_dir`: the configuration directory (`/etc/prometheus`)
 - `prometheus_data_dir`: the data directory (`/var/lib/prometheus`)
-- `prometheus_web_listen_address`: the listening address of the web interface (`127.0.0.1:9090`)
+- `prometheus_web_listen_address`: the listening address of the web interface (`0.0.0.0:9090`)
 - `prometheus_web_external_url` the external URL you will access the web interface with (`''`)
 - `prometheus_storage_retention`: the retention period (`30d`)
 - `prometheus_storage_retention_size`: the max retention size (`0`, unlimited)
