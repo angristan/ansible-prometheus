@@ -1,0 +1,37 @@
+---
+
+- name: Add ansible_default_alert.rules
+  template:
+    src: "alert.rules.j2"
+    dest: "{{ prometheus_config_dir }}/rules/ansible_alert.rules"
+    owner: prometheus
+    group: prometheus
+    mode: 0640
+    validate: "/usr/local/bin/promtool check rules %s"
+  when:
+    - prometheus_alert_rules != []
+  notify:
+    - reload prometheus
+
+- name: Copy custom alerting rule files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ prometheus_config_dir }}/rules/"
+    owner: prometheus
+    group: prometheus
+    mode: 0640
+    validate: "/usr/local/bin/promtool check rules %s"
+  with_fileglob: "{{ prometheus_alert_rules_files }}"
+  notify:
+    - reload prometheus
+
+- name: Add prometheus.yml
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ prometheus_config_dir }}/prometheus.yml"
+    owner: prometheus
+    group: prometheus
+    mode: 0640
+    validate: "/usr/local/bin/promtool check config %s"
+  notify:
+    - reload prometheus

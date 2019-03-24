@@ -1,0 +1,22 @@
+---
+
+- name: Check if prometheus is installed
+  stat:
+    path: "/usr/local/bin/prometheus"
+  register: prometheus_binary
+
+- include: install.yml
+  when: not prometheus_binary.stat.exists or prometheus_force_install
+  tags:
+    - prometheus.install
+
+- include: configure.yml
+  tags:
+    - prometheus.configure
+
+- name: Ensure prometheus service is started and enabled
+  systemd:
+    daemon_reload: true
+    name: prometheus
+    state: started
+    enabled: true

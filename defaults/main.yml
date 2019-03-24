@@ -1,0 +1,65 @@
+---
+
+prometheus_version: 2.8.0
+prometheus_force_install: false
+
+prometheus_config_dir: /etc/prometheus
+prometheus_data_dir: /var/lib/prometheus
+
+prometheus_web_listen_address: "0.0.0.0:9090"
+prometheus_web_external_url: ''
+
+prometheus_storage_retention: "30d"
+prometheus_storage_retention_size: "0"
+
+prometheus_config_flags_extra: {}
+
+prometheus_alertmanager_config: []
+
+prometheus_global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+
+prometheus_scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets:
+          - "localhost:9090"
+
+prometheus_alert_rules_files:
+  - prometheus/rules/*.rules
+
+prometheus_alert_rules:
+  - alert: InstanceDown
+    expr: "up == 0"
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
+  - alert: CriticalCPULoad
+    expr: '100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node",mode="idle"}[5m])) * 100) > 90'
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has Critical CPU load for more than 5 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} - Critical CPU load{% endraw %}"
+  - alert: CriticalRAMUsage
+    expr: '(1 - ((node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) / node_memory_MemTotal_bytes)) * 100 > 90'
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} has Critical Memory Usage more than 5 minutes.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} has Critical Memory Usage{% endraw %}"
+  - alert: CriticalDiskSpace
+    expr: 'node_filesystem_free_bytes{job="node",filesystem!~"^/run(/|$)"} / node_filesystem_size_bytes{job="node"} < 0.1'
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has less than 10% space remaining.{% endraw %}"
+      summary: "{% raw %}Instance {{ $labels.instance }} - Critical disk space usage{% endraw %}"
