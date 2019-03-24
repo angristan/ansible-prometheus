@@ -39,27 +39,3 @@ prometheus_alert_rules:
     annotations:
       description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minutes.{% endraw %}"
       summary: "{% raw %}Instance {{ $labels.instance }} down{% endraw %}"
-  - alert: CriticalCPULoad
-    expr: '100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node",mode="idle"}[5m])) * 100) > 90'
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has Critical CPU load for more than 5 minutes.{% endraw %}"
-      summary: "{% raw %}Instance {{ $labels.instance }} - Critical CPU load{% endraw %}"
-  - alert: CriticalRAMUsage
-    expr: '(1 - ((node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes) / node_memory_MemTotal_bytes)) * 100 > 90'
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      description: "{% raw %}{{ $labels.instance }} has Critical Memory Usage more than 5 minutes.{% endraw %}"
-      summary: "{% raw %}Instance {{ $labels.instance }} has Critical Memory Usage{% endraw %}"
-  - alert: CriticalDiskSpace
-    expr: 'node_filesystem_free_bytes{job="node",filesystem!~"^/run(/|$)"} / node_filesystem_size_bytes{job="node"} < 0.1'
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      description: "{% raw %}{{ $labels.instance }} of job {{ $labels.job }} has less than 10% space remaining.{% endraw %}"
-      summary: "{% raw %}Instance {{ $labels.instance }} - Critical disk space usage{% endraw %}"
