@@ -40,6 +40,8 @@ You can write all your rules in `prometheus_alert_rules`, or keep the default ru
 - hosts: myhost
   roles: prometheus
   vars:
+    prometheus_web_listen_address: "127.0.0.1:9090"
+    prometheus_web_external_url: 'https://prometheus.domain.tld'
     prometheus_scrape_configs:
       - job_name: "prometheus"
         static_configs:
@@ -49,13 +51,10 @@ You can write all your rules in `prometheus_alert_rules`, or keep the default ru
         static_configs:
           - targets:
               - "localhost:9100"
-      - job_name: "netdata"
-        metrics_path: /api/v1/allmetrics
-        params:
-          format: [ prometheus ]
-        static_configs:
-          - targets:
-              - "localhost:19999"
+    prometheus_alertmanager_config:
+      - static_configs:
+        - targets:
+          - localhost:9093
 ```
 
 ## License
