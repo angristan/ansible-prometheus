@@ -4,6 +4,8 @@
   stat:
     path: "/usr/local/bin/prometheus"
   register: prometheus_binary
+  tags:
+    - prometheus.install
 
 - include: install.yml
   when: not prometheus_binary.stat.exists or prometheus_force_install
