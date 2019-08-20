@@ -1,5 +1,15 @@
 ---
 
+- name: Create systemd service unit
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart prometheus
+
 - name: Add ansible_default_alert.rules
   template:
     src: "alert.rules.j2"
