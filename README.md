@@ -1,7 +1,5 @@
 # Ansible role for Prometehus
 
-[![CircleCI](https://circleci.com/gh/angristan/ansible-prometheus.svg?style=svg)](https://circleci.com/gh/angristan/ansible-prometheus)
-
 This role will setup [Prometheus](https://github.com/prometheus/prometheus/) on any Linux machine running systemd.
 
 ## Requirements
