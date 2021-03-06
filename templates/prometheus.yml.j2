@@ -1,6 +1,11 @@
 #jinja2: trim_blocks: True, lstrip_blocks: True
 {{ ansible_managed | comment }}
 
+global:
+  scrape_interval: {{ prometheus_global.scrape_interval }}
+  scrape_timeout: {{ prometheus_global.scrape_timeout }}
+  evaluation_interval: {{ prometheus_global.evaluation_interval }}
+
 rule_files:
   - {{ prometheus_config_dir }}/rules/*.rules
 
