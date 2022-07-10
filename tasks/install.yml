@@ -1,13 +1,12 @@
 ---
-
 - name: Create prometheus group
-  group:
+  ansible.builtin.group:
     name: prometheus
     system: true
     state: present
 
 - name: Create prometheus user
-  user:
+  ansible.builtin.user:
     name: prometheus
     system: true
     shell: "/sbin/nologin"
@@ -16,7 +15,7 @@
     home: "{{ prometheus_data_dir }}"
 
 - name: Create prometheus data directory
-  file:
+  ansible.builtin.file:
     path: "{{ prometheus_data_dir }}"
     state: directory
     owner: prometheus
@@ -24,7 +23,7 @@
     mode: 0755
 
 - name: Create prometheus configuration directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: prometheus
@@ -35,9 +34,10 @@
     - "{{ prometheus_config_dir }}/rules"
 
 - name: Download prometheus release archive to local folder
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}.tar.gz"
     dest: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}.tar.gz"
+    mode: 0644
   register: _download_archive
   until: _download_archive is succeeded
   retries: 5
@@ -46,7 +46,7 @@
   check_mode: false
 
 - name: Unarchive prometheus binaries
-  unarchive:
+  ansible.builtin.unarchive:
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}.tar.gz"
     dest: "/tmp"
     creates: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}/prometheus"
@@ -54,7 +54,7 @@
   check_mode: false
 
 - name: Upload prometheus and promtool binaries
-  copy:
+  ansible.builtin.copy:
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}/{{ item }}"
     dest: "/usr/local/bin/{{ item }}"
     mode: 0755
@@ -67,7 +67,7 @@
     - restart prometheus
 
 - name: Upload console templates
-  copy:
+  ansible.builtin.copy:
     src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}/{{ item }}/"
     dest: "{{ prometheus_config_dir }}/{{ item }}/"
     mode: 0644
