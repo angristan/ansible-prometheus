@@ -9,7 +9,7 @@ This role will setup [Prometheus](https://github.com/prometheus/prometheus/) on 
 
 ## Role Variables
 
-- `prometheus_version`: the versions that will be installed and downloaded. (`2.8.0`).
+- `prometheus_version`: the versions that will be installed and downloaded.
 
 The role will download the Prometheus release on the deployer and upload the needed files to the target host.
 
@@ -34,12 +34,11 @@ You can write all your rules in `prometheus_alert_rules`, or keep the default ru
 
 ```yaml
 ---
-
 - hosts: myhost
   roles: prometheus
   vars:
     prometheus_web_listen_address: "127.0.0.1:9090"
-    prometheus_web_external_url: 'https://prometheus.domain.tld'
+    prometheus_web_external_url: "https://prometheus.domain.tld"
     prometheus_scrape_configs:
       - job_name: "prometheus"
         static_configs:
@@ -51,8 +50,8 @@ You can write all your rules in `prometheus_alert_rules`, or keep the default ru
               - "localhost:9100"
     prometheus_alertmanager_config:
       - static_configs:
-        - targets:
-          - localhost:9093
+          - targets:
+              - localhost:9093
 ```
 
 ## License

@@ -1,13 +1,12 @@
 ---
-
-prometheus_version: 2.25.0
+prometheus_version: 2.36.2
 prometheus_force_install: false
 
 prometheus_config_dir: /etc/prometheus
 prometheus_data_dir: /var/lib/prometheus
 
 prometheus_web_listen_address: "0.0.0.0:9090"
-prometheus_web_external_url: ''
+prometheus_web_external_url: ""
 
 prometheus_storage_retention: "30d"
 prometheus_storage_retention_size: "0"
