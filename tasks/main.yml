@@ -1,7 +1,6 @@
 ---
-
 - name: Check if prometheus is installed
-  stat:
+  ansible.builtin.stat:
     path: "/usr/local/bin/prometheus"
   register: prometheus_binary
   tags:
@@ -17,7 +16,7 @@
     - prometheus.configure
 
 - name: Ensure prometheus service is started and enabled
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
     name: prometheus
     state: started
