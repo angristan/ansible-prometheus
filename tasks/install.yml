@@ -64,7 +64,7 @@
     - prometheus
     - promtool
   notify:
-    - restart prometheus
+    - Restart prometheus
 
 - name: Upload console templates
   ansible.builtin.copy:
@@ -77,4 +77,4 @@
     - console_libraries
     - consoles
   notify:
-    - restart prometheus
+    - Restart prometheus

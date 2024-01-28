@@ -7,7 +7,7 @@
     group: root
     mode: 0644
   notify:
-    - restart prometheus
+    - Restart prometheus
 
 - name: Add ansible_default_alert.rules
   ansible.builtin.template:
@@ -20,7 +20,7 @@
   when:
     - prometheus_alert_rules != []
   notify:
-    - reload prometheus
+    - Reload prometheus
 
 - name: Copy custom alerting rule files
   ansible.builtin.copy:
@@ -32,7 +32,7 @@
     validate: "/usr/local/bin/promtool check rules %s"
   with_fileglob: "{{ prometheus_alert_rules_files }}"
   notify:
-    - reload prometheus
+    - Reload prometheus
 
 - name: Add prometheus.yml
   ansible.builtin.template:
@@ -43,4 +43,4 @@
     mode: 0640
     validate: "/usr/local/bin/promtool check config %s"
   notify:
-    - reload prometheus
+    - Reload prometheus

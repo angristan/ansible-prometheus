@@ -6,12 +6,14 @@
   tags:
     - prometheus.install
 
-- include_tasks: install.yml
+- name: Include install.yml if prometheus is not installed or prometheus_force_install is true
+  ansible.builtin.include_tasks: install.yml
   when: not prometheus_binary.stat.exists or prometheus_force_install
   tags:
     - prometheus.install
 
-- include_tasks: configure.yml
+- name: Include configure.yml if prometheus is installed
+  ansible.builtin.include_tasks: configure.yml
   tags:
     - prometheus.configure
 
