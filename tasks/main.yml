@@ -6,12 +6,12 @@
   tags:
     - prometheus.install
 
-- include: install.yml
+- include_tasks: install.yml
   when: not prometheus_binary.stat.exists or prometheus_force_install
   tags:
     - prometheus.install
 
-- include: configure.yml
+- include_tasks: configure.yml
   tags:
     - prometheus.configure
 
